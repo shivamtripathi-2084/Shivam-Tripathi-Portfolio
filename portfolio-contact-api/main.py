@@ -87,10 +87,11 @@ def send_contact_message(request: Request,data: ContactMessage):
             server.login(sender_email, app_password)
             server.send_message(email_message)
 
-    except (smtplib.SMTPException, OSError):
+    except (smtplib.SMTPException, OSError) as exc:
+        print(f"Email sending failed: {type(exc).__name__}: {exc}")
         raise HTTPException(
             status_code=502,
-            detail="The email could not be sent. Please try again later.",
+            detail="The email could not be sent. Please try again later."
         )
 
     return {"message": "Your message has been sent successfully!"}
