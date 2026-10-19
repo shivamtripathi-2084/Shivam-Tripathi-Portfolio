@@ -25,6 +25,7 @@ app.add_middleware(
     allow_origins=[
         "http://127.0.0.1:5500",
         "http://localhost:5500",
+        "https://shivam-tripathi-portfolio-ui.onrender.com"
     ],
     allow_credentials=False,
     allow_methods=["POST"],
@@ -99,7 +100,7 @@ def send_contact_message(request: Request, data: ContactMessage):
             ),
         })
 
-        print("Resend request completed:", result)
+
 
     except Exception as exc:
         # Avoid logging secrets or message contents

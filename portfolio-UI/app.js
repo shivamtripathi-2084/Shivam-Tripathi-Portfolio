@@ -18,6 +18,7 @@ const formStatus = document.getElementById("form-status");
 
 // Local development URL.
 // Before deployment, replace this with your Render API URL.
+// const API_URL = "http://127.0.0.1:8000/api/contact";
 const API_URL = "https://shivam-tripathi-portfolio.onrender.com/api/contact";
 
 if (contactForm && formStatus) {

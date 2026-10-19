@@ -1090,19 +1090,23 @@ section {
 
 @media screen and (min-width: 1024px) {
   body {
-    font-size: clamp(20px, 1.5vw, 24px);
+    font-size: clamp(16px, 1vw, 18px);
   }
 
   .right-header .name {
-    font-size: clamp(3.1rem, 3.4vw, 4rem) !important;
+    font-size: clamp(2.5rem, 3vw, 3.5rem) !important;
   }
 
   .main-title h2 {
-    font-size: clamp(4rem, 4.2vw, 5rem);
+    font-size: clamp(3rem, 3.5vw, 4rem);
+  }
+
+  .main-title h2 span {
+    font-size: inherit;
   }
 
   .main-title h2 .bg-text {
-    font-size: clamp(5.5rem, 6vw, 7.5rem);
+    font-size: clamp(4.5rem, 5vw, 6rem);
   }
 }
 
