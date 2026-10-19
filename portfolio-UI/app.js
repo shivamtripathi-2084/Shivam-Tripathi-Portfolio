@@ -12,54 +12,73 @@
   });
 })();
 
+
 const contactForm = document.getElementById("contact-form");
 const formStatus = document.getElementById("form-status");
 
-contactForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
+// Local development URL.
+// Before deployment, replace this with your Render API URL.
+const API_URL = "https://shivam-tripathi-portfolio.onrender.com/api/contact";
 
-  const submitButton = contactForm.querySelector('button[type="submit"]');
-  const buttonText = submitButton.querySelector(".btn-text");
-  const originalText = buttonText.textContent;
+if (contactForm && formStatus) {
+  contactForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-  submitButton.disabled = true;
-  buttonText.textContent = "Sending...";
-  formStatus.textContent = "Sending message...";
+    const submitButton = contactForm.querySelector(
+      'button[type="submit"]'
+    );
+    const buttonText = submitButton?.querySelector(".btn-text");
+    const originalText = buttonText?.textContent || "Send Message";
 
-  const formData = new FormData(contactForm);
+    if (submitButton) submitButton.disabled = true;
+    if (buttonText) buttonText.textContent = "Sending...";
 
-  const data = {
-    name: (formData.get("name") || "").trim(),
-    email: (formData.get("email") || "").trim(),
-    subject: (formData.get("subject") || "").trim(),
-    message: (formData.get("message") || "").trim(),
-    website: (formData.get("website") || "").trim(),
-  };
+    formStatus.textContent = "Sending message...";
 
-  try {
-    const response = await fetch("http://127.0.0.1:8000/api/contact", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const formData = new FormData(contactForm);
 
-    const result = await response.json();
+    const data = {
+      name: (formData.get("name") || "").toString().trim(),
+      email: (formData.get("email") || "").toString().trim(),
+      subject: (formData.get("subject") || "").toString().trim(),
+      message: (formData.get("message") || "").toString().trim(),
+      website: (formData.get("website") || "").toString().trim(),
+    };
 
-    if (!response.ok) {
-      throw new Error(result.detail || "Unable to send your message.");
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.detail || "Unable to send your message."
+        );
+      }
+
+      formStatus.textContent =
+        result.message || "Your message has been sent successfully!";
+
+      contactForm.reset();
+    } catch (error) {
+      console.error("Contact form error:", error);
+
+      if (error instanceof TypeError) {
+        formStatus.textContent =
+          "Cannot connect to the server. Please try again.";
+      } else {
+        formStatus.textContent =
+          error.message || "Something went wrong. Please try again.";
+      }
+    } finally {
+      if (submitButton) submitButton.disabled = false;
+      if (buttonText) buttonText.textContent = originalText;
     }
-
-    formStatus.textContent = result.message;
-    contactForm.reset();
-  } catch (error) {
-    formStatus.textContent =
-      error.message === "Failed to fetch"
-        ? "Cannot connect to the server. Please try again."
-        : error.message;
-  } finally {
-    submitButton.disabled = false;
-    buttonText.textContent = originalText;
-  }
-});
+  });
+}
